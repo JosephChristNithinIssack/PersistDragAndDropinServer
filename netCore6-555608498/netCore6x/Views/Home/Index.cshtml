@@ -1,0 +1,43 @@
+﻿
+
+<div>
+    <ejs-grid id="Grid" height="500" allowExcelExport="true" allowRowDragAndDrop="true" rowDrop="rowDrop" allowFiltering="true">
+        <e-data-manager url="/Home/UrlDatasource" adaptor="UrlAdaptor"></e-data-manager>
+        <e-grid-filterSettings type="Excel"></e-grid-filterSettings>
+        <e-grid-columns>
+            <e-grid-column field="OrderID" headerText="Order ID" isPrimaryKey="true" textAlign="Right" width="120"></e-grid-column>
+            <e-grid-column field="CustomerID" headerText="Customer Name" width="150"></e-grid-column>
+            <e-grid-column field="Freight" headerText="Freight" textAlign="Right" format="C2" width="120"></e-grid-column>
+            <e-grid-column field="EmployeeID" headerText="Employee ID" width="170"></e-grid-column>
+            <e-grid-column field="OrderDate" headerText="Order Date" width="150"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+</div>
+
+<script>
+
+    function rowDrop(args) {
+        var grid = document.getElementById('Grid').ej2_instances[0];
+
+        args.cancel = true; // prevent the default action
+
+        let ajax = new ej.base.Ajax();
+
+        ajax.type = "POST"
+
+        ajax.url = "Home/Move"
+
+        let moveposition = { oldIndex: args.fromIndex, newIndex: args.dropIndex };
+
+        ajax.data = JSON.stringify(moveposition);
+
+        ajax.send();
+
+        ajax.onSuccess = () => {
+
+            grid.refresh();  // refresh the Grid once the action is done
+
+        }
+
+    }
+</script>
